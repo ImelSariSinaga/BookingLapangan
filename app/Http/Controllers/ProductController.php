@@ -85,7 +85,7 @@ class productController extends Controller
         Product::create($validatedData);
 
         // Redirect kembali ke halaman index produk dengan pesan sukses
-        return redirect()->route('product')->with('success', 'Product added successfully');
+        return redirect()->route('product')->with('success', 'Product ditambahkan');
     }
 
     public function edit($id_produkolahraga)

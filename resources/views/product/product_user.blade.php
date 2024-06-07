@@ -44,39 +44,39 @@
                         </div>
                     </div>
                 </div>
-            @endforeach
+            </div>
         </div>
-    </div>
 
-
-    {{-- Ini adalah modal --}}
-
-    <div class="modal fade" id="beliModal" tabindex="-1" aria-labelledby="beliModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="beliModalLabel">Beli Produk</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <h5>Detail Produk</h5>
-                    <div class="mb-3">
-                        <strong>Nama Produk:</strong> {{ $item->nama_produkolahraga }}
+        
+        {{-- Ini adalah modal --}}
+        
+        <div class="modal fade" id="beliModal" tabindex="-1" aria-labelledby="beliModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="beliModalLabel">Beli Produk</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="mb-3">
-                        <strong>Harga:</strong> {{ $item->harga_produkolahraga }}
-                    </div>
-                    <div class="mb-3">
-                        <strong>Deskripsi:</strong> {{ $item->deskripsi }}
-                    </div>
-                    <!-- Form pembelian produk -->
-                    <form action="{{ route('beli.product', $item->id_produkolahraga) }}" method="POST">
+                    <div class="modal-body">
+                        <h5>Detail Produk</h5>
+                        <div class="mb-3">
+                            <strong>Nama Produk:</strong> {{ $item->nama_produkolahraga }}
+                        </div>
+                        <div class="mb-3">
+                            <strong>Harga:</strong> {{ $item->harga_produkolahraga }}
+                        </div>
+                        <div class="mb-3">
+                            <strong>Deskripsi:</strong> {{ $item->deskripsi }}
+                        </div>
+                        <!-- Form pembelian produk -->
+                        <form action="{{ route('beli.product', $item->id_produkolahraga) }}" method="POST">
                         @csrf
                         <!-- Isi form pembelian disini -->
                         <!-- Contoh: -->
                         <div class="mb-3">
                             <label for="nama">Nama:</label>
-                            <input type="text" class="form-control" id="nama" name="nama" value="{{ session('username') }}">
+                            <input type="text" class="form-control" id="nama" name="nama"
+                            value="{{ session('username') }}">
                         </div>
                         <div class="mb-3">
                             <label for="jumlah">Jumlah:</label>
@@ -85,12 +85,14 @@
                         <input type="hidden" name="product_id" value="{{ $item->id_produkolahraga }}">
                         <button type="submit" class="btn btn-success">Beli</button>
                     </form>
-
+                    
                 </div>
             </div>
         </div>
+        @endforeach
     </div>
-
-
-
-@endsection
+    
+    
+    
+    @endsection
+    

@@ -18,10 +18,9 @@
         </div>
     @endif
     <div class="container">
-        <h1>manager List</h1>
+        <h1>List Manager</h1>
 
-        <!-- Add manager Button -->
-        <button type="button" class="btn btn-success" data-toggle="modal" data-target="addmanagerModalLabel" >
+        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addmanagerModal">
             Add manager
         </button>
 
@@ -33,7 +32,8 @@
                     <th>Username</th>
                     <th>Jenis Pengguna</th>
                     <th>Last Login</th>
-                    <th>Action</th>
+                    <th>Lokasi Pengelola</th>
+                    <th>Aksi</th>
                 </tr>
             </thead>
             <tbody>
@@ -44,13 +44,12 @@
                         <td>{{ $manager->username_pengguna }}</td>
                         <td>{{ $manager->jenis_pengguna }}</td>
                         <td>{{ $manager->last_login }}</td>
+                        @foreach ($data_lokasi->where('id_lokasi', $manager->id_lokasi) as $lokasi)
+                            <td>{{ $lokasi->nama_lokasi }}</td>
+                        @endforeach
                         <td>
-                            {{-- View Button --}}
-                            <a href="{{ route('pengelola.show', $manager->id_pengguna) }}" class="btn btn-primary">View</a>
-
-                            {{-- Delete Form --}}
-                            <form action="{{ route('pengelola.destroy', $manager->id_pengguna) }}" method="POST" class="d-inline"
-                                onsubmit="return confirm('Are you sure you want to delete this manager?')">
+                            <form action="{{ route('pengelola.destroy', $manager->id_pengguna) }}" method="POST"
+                                class="d-inline" onsubmit="return confirm('Are you sure you want to delete this manager?')">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-danger">Delete</button>
@@ -58,12 +57,15 @@
                         </td>
                     </tr>
                 @endforeach
+                
+                
             </tbody>
         </table>
     </div>
 
     <!-- Add manager Modal -->
-    <div class="modal fade" id="addmanagerModal" tabindex="-1" role="dialog" aria-labelledby="addmanagerModalLabel" aria-hidden="true">
+    <div class="modal fade" id="addmanagerModal" tabindex="-1" role="dialog" aria-labelledby="addmanagerModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -82,6 +84,15 @@
                         <div class="form-group">
                             <label for="password">Password</label>
                             <input type="password" class="form-control" id="password" name="password" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="id_lokasi" class="form-label">Lokasi Cabang<span class="text-danger">*</span></label>
+                            <select class="form-control" id="id_lokasi" name="id_lokasi">
+                                <option value="">Pilih Lokasi</option>
+                                @foreach ($data_lokasi as $lokasi)
+                                    <option value="{{ $lokasi->id_lokasi }}">{{ $lokasi->nama_lokasi }}</option>
+                                @endforeach
+                            </select>
                         </div>
                     </div>
                     <div class="modal-footer">

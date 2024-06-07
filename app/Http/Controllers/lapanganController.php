@@ -18,12 +18,9 @@ class lapanganController extends Controller
      */
     public function lapangan()
     {
-        // Ambil semua data lapangan
         $data_lapangan = Lapangan::all();
-        // Ambil semua data lokasi
         $data = Lokasi::all();
 
-        // Kirim data lapangan dan data lokasi ke tampilan
         return view('court.lapangan', compact('data_lapangan', 'data'));
     }
 
@@ -42,14 +39,14 @@ class lapanganController extends Controller
 
     public function user_court_show($id)
     {
-        $lapangan = Lapangan::findOrFail($id); // Menggantikan "Lapangan" dengan model Anda yang sesuai
+        $lapangan = Lapangan::findOrFail($id);
         return view('court.lapangan_user_show', compact('lapangan'));
     }
 
 
     public function lapangan_create()
     {
-        $data_lokasi = Lokasi::all(); // Fetch all Lokasi data
+        $data_lokasi = Lokasi::all();
         return view('court.lapangan_create', ['data_lokasi' => $data_lokasi]);
     }
 
@@ -64,22 +61,37 @@ class lapanganController extends Controller
         $validatedData = $request->validate([
             'nama_lapangan' => 'required|string|max:255',
             'harga_lapangan' => 'required|numeric',
-            'deskripsi_lapangan' => 'required|string', // Ubah jumlahLapangan menjadi deskripsi_lapangan
-            'id_lokasi' => 'required|exists:lokasi,id_lokasi', // Validasi untuk ID kategori lapangan
-            'img_lapangan' => 'image|mimes:jpeg,png,jpg,gif|max:2048', // Validasi untuk gambar
+            'deskripsi_lapangan' => 'required|string',
+            'id_lokasi' => 'required|exists:lokasi,id_lokasi',
+            'img_lapangan' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
         ], $messages);
 
 
+        // if ($request->hasFile('img_lapangan')) {
+        //     $fileNameWithExt = $request->file('img_lapangan')->getClientOriginalName();
+        //     $fileName = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
+        //     $extension = $request->file('img_lapangan')->getClientOriginalExtension();
+        //     $fileNameToStore = $fileName . '_' . time() . '.' . $extension;
+        //     $path = $request->file('img_lapangan')->storeAs('public/img', $fileNameToStore);
+        //     $validatedData['img_lapangan'] = 'img/' . $fileNameToStore;
+        // }
+
         if ($request->hasFile('img_lapangan')) {
-            $fileNameWithExt = $request->file('img_lapangan')->getClientOriginalName();
+            $file = $request->file('img_lapangan');
+            $fileNameWithExt = $file->getClientOriginalName();
             $fileName = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
-            $extension = $request->file('img_lapangan')->getClientOriginalExtension();
+            $extension = $file->getClientOriginalExtension();
             $fileNameToStore = $fileName . '_' . time() . '.' . $extension;
-            $path = $request->file('img_lapangan')->storeAs('public/img', $fileNameToStore);
+
+            if (!file_exists(public_path('img'))) {
+                mkdir(public_path('img'), 0755, true);
+            }
+
+            $file->move(public_path('img'), $fileNameToStore);
+
             $validatedData['img_lapangan'] = 'img/' . $fileNameToStore;
         }
 
-        // Simpan data lapangan beserta ID kategori lapangan yang dipilih
         Lapangan::create($validatedData);
 
         return redirect()->route('lapangan_index')->with('success', 'Lapangan added successfully');
@@ -91,52 +103,48 @@ class lapanganController extends Controller
         $lapangan = Lapangan::findOrFail($id_lapangan);
         return view('court.lapangan_edit', compact('lapangan'));
     }
+
+
+
     public function update_lapangan(Request $request, string $id_lapangan)
     {
-        // Temukan lapangan berdasarkan ID
         $lapangan = Lapangan::findOrFail($id_lapangan);
 
-        // Validasi data yang dikirimkan oleh form
         $validatedData = $request->validate([
             'nama_lapangan' => 'required|string|max:255',
             'harga_lapangan' => 'required|numeric',
-            'deskripsi_lapangan' => 'required|string', // Ubah jumlahLapangan menjadi deskripsi_lapangan
-            'img_lapangan' => 'image|mimes:jpeg,png,jpg,gif|max:2048', // Validasi untuk file gambar
+            'deskripsi_lapangan' => 'required|string',
+            'img_lapangan' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
         ], [
             'nama_lapangan.required' => 'Nama lapangan wajib diisi.',
             'harga_lapangan.required' => 'Harga lapangan wajib diisi.',
-            'deskripsi_lapangan.required' => 'Deskripsi lapangan wajib diisi.', // Ubah pesan validasi
+            'deskripsi_lapangan.required' => 'Deskripsi lapangan wajib diisi.',
             'harga_lapangan.numeric' => 'Harga harus berupa angka.',
             'img_lapangan.image' => 'File harus berupa gambar.',
             'img_lapangan.mimes' => 'Format gambar harus jpeg, png, jpg, atau gif.',
             'img_lapangan.max' => 'Ukuran gambar tidak boleh lebih dari 2MB.',
         ]);
 
-        // Periksa apakah ada file gambar yang diunggah
         if ($request->hasFile('img_lapangan')) {
-            // Hapus gambar lama jika ada
             if ($lapangan->img_lapangan) {
-                // Hapus gambar lama dari penyimpanan
                 Storage::delete($lapangan->img_lapangan);
             }
 
-            // Simpan gambar baru
             $fileNameWithExt = $request->file('img_lapangan')->getClientOriginalName();
             $fileName = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
             $extension = $request->file('img_lapangan')->getClientOriginalExtension();
             $fileNameToStore = $fileName . '_' . time() . '.' . $extension;
             $path = $request->file('img_lapangan')->storeAs('public/img', $fileNameToStore);
 
-            // Tambahkan path gambar ke data yang divalidasi
             $validatedData['img_lapangan'] = 'img/' . $fileNameToStore;
         }
 
-        // Perbarui informasi lapangan dengan data yang divalidasi
         $lapangan->update($validatedData);
 
-        // Redirect kembali ke halaman index lapangan dengan pesan sukses
         return redirect()->route('lapangan_index')->with('success', 'Lapangan updated successfully');
     }
+
+
 
 
     public function destroy_lapangan(string $id_lapangan)
@@ -149,73 +157,5 @@ class lapanganController extends Controller
 
 
         return redirect()->route('lapangan_index')->with('success', 'Lapangan deleted successfully');
-    }
-
-
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
     }
 }

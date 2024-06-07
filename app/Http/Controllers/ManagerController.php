@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Lokasi;
 use App\Models\PenggunaOlahraga;
 use Illuminate\Support\Facades\Hash;
 
@@ -10,22 +11,11 @@ class ManagerController extends Controller
 {
     public function index()
     {
-        // Retrieve all manager with jenis_pengguna 'pengelola' from the database
         $managers = PenggunaOlahraga::where('jenis_pengguna', 'pengelola')->get();
-
-        // Pass the manager data to the view
-        return view('manager.manager', compact('managers'));
+        $data_lokasi = Lokasi::all();
+        return view('manager.manager', ['data_lokasi' => $data_lokasi, 'managers' => $managers]);
     }
 
-
-    public function show_member($id_pengguna)
-    {
-        // Retrieve the member with the given ID from the database
-        $member = PenggunaOlahraga::findOrFail($id_pengguna);
-
-        // Pass the member data to the view
-        return view('manager.manager_show', compact('member'));
-    }
     public function destroy_member($id)
     {
         // Find the member by ID
@@ -35,7 +25,7 @@ class ManagerController extends Controller
         $member->delete();
 
         // Redirect back with a success message
-        return redirect()->back()->with('success', 'Member has been deleted successfully.');
+        return redirect()->back()->with('success', 'Manager has been deleted successfully.');
     }
 
     // Method untuk menyimpan member baru
@@ -50,8 +40,9 @@ class ManagerController extends Controller
             'username_pengguna' => $request->username,
             'password_pengguna' => Hash::make($request->password),
             'jenis_pengguna' => 'pengelola',
-            'created_by' => 'admin', // Nilai default 'admin'
-            'updated_by' => 'admin', // Nilai default 'admin'
+            'created_by' => 'admin',      
+            'updated_by' => 'admin',   
+            'id_lokasi' => $request->id_lokasi,
         ]);
 
         return redirect()->back()->with('success', 'Member berhasil ditambahkan.');
@@ -63,66 +54,4 @@ class ManagerController extends Controller
      */
 
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
 }

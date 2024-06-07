@@ -19,24 +19,30 @@
             <div class="row justify-content-between align-items-center">
                 <div class="col-auto">
                     <div class="p-2.5 mt-1 d-flex align-items-center">
-                        <img src="{{ asset('images/botak.jpg') }}" alt="Icon Web" class="rounded-circle me-2"
-                        style="width: 40px; height: 40px;">
-                        <h1 class="font-bold text-gray text-sm m-0">Admin Dashboard</h1>
+                        <h1 class="font-bold text-gray text-sm m-0">
+                            @if(session('jenis_pengguna') === 'pemilik')
+                            Admin "{{ session('username') }}"
+                            
+                            @else
+                            Manager "{{ session('username') }}"
+                            @endif
+                        
+                        </h1>
                     </div>
                     <hr class="my-2 bg-secondary">
                 </div>
                 <div class="col-auto d-flex align-items-center">
-                    <img src="{{ asset('images/asd.jpg') }}" alt="Profile Image" class="rounded-circle me-2"
-                        style="width: 40px; height: 40px;">
                     <div class="dropdown">
-                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+                        Halo, <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton"
                             data-bs-toggle="dropdown" aria-expanded="false">
                             {{ session('username') }}
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            {{-- <li><a class="dropdown-item" href="#">Profile</a></li>
+                            <li><a class="dropdown-item" href="#">Settings</a></li>
                             <li>
                                 <hr class="dropdown-divider">
-                            </li>
+                            </li> --}}
                             <li>
                                 <form id="logout-form" action="{{ route('logout') }}" method="POST">
                                     @csrf
@@ -58,7 +64,7 @@
                     <a href="{{ route('admin_dashboard') }}" class="text-decoration-none text-light">
                         <div class="p-2.5 mt-3 d-flex align-items-center rounded hover:bg-primary cursor-pointer">
                             <i class="bi bi-house-door-fill"></i>
-                            <span class="text-gray-200 ms-3">Home</span>
+                            <span class="text-gray-200 ms-3">Dashboard</span>
                         </div>
                     </a>
                     <a href="{{ route('product') }}" class="text-decoration-none text-light">
@@ -88,7 +94,7 @@
                     @if (session('jenis_pengguna') === 'pemilik')
                         <a href="{{ route('pengelola') }}" class="text-decoration-none text-light">
                             <div class="p-2.5 mt-3 d-flex align-items-center rounded hover:bg-primary cursor-pointer">
-                                <i class="bi bi-person-fill"></i>
+                                <i class="bi bi-person-check-fill"></i></i>
                                 <span class="text-gray-200 ms-3">Manager</span>
                             </div>
                         </a>
@@ -118,9 +124,13 @@
         </div>
     </div>
 
-
+    <!-- jQuery, Popper.js, and Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 
 </html>

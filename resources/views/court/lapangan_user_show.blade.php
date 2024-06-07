@@ -49,7 +49,7 @@
                         <div class="sm:w-1/2 px-4 py-2" style="width:50%">
 
                             <h3 class="text-lg font-bold text-gray-700">Gambar Lapangan</h3>
-                            <img src="{{ asset('storage/' . $lapangan->img_lapangan) }}" alt="Gambar Lapangan"
+                            <img src="{{ asset($lapangan->img_lapangan) }}" alt="Gambar Lapangan"
                                 class="mx-auto" style="width: 100%;">
 
                         </div>
@@ -57,7 +57,7 @@
                 </div>
 
                 <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
-                    <button type="button" class="btn btn-secondary btn-lg btn-block"
+                    <button type="button" class="btn btn-danger btn-lg btn-block"
                         onclick="window.location='{{ route('view_lapangan') }}'">Back</button>
                 </div>
             </div>

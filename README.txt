@@ -5,15 +5,12 @@ password  :
 
 Username & Password
 * Admin
-- Username : imell
-- Password : pemilik
+- Username : admin
+- Password : admin
 
-*
 * User
 - Username : Pak Oppir
-- Password : Keren Sekali
+- Password : Baik Hati
 
-Password ZIP
-Matcha Cheesecake
-
-
+ENV file ada di
+.env.example hapus ".example" nya

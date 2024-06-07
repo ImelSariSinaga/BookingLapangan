@@ -39,6 +39,7 @@
                                     <th>Total Product</th>
                                     <th>Total Price</th>
                                     <th>Created At</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>

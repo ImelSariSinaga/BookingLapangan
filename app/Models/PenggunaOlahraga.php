@@ -7,32 +7,29 @@ use Illuminate\Database\Eloquent\Model;
 
 class PenggunaOlahraga extends Model
 {
-
-    use HasFactory;
-
     protected $table = 'pengguna_olahraga';
-
+    
     protected $fillable = [
-        'username_pengguna',
+        'username_pengguna',        
         'password_pengguna',
         'created_by',
         'updated_by',
-        'last_login',
+        'last_login', 
         'jenis_pengguna',
-        'tgl_member_berakhir'
+        'tgl_member_berakhir',
+        'id_lokasi'
     ];
-
+    
     protected $primaryKey = 'id_pengguna';
-
+ 
     public function lapangan()
     {
         return $this->belongsToMany(Lapangan::class, 'booking_olahraga', 'id_pengguna', 'id_lapangan');
     }
 
-    // PenggunaOlahraga Model
     public function pelanggan()
     {
-        return $this->belongsTo(Pelanggan::class, 'id_pengguna', 'id_pengguna');
+        return $this->hasOne(Pelanggan::class, 'id_pelanggan', 'id_pelanggan');
     }
 
     public function produk()
@@ -40,3 +37,4 @@ class PenggunaOlahraga extends Model
         return $this->belongsToMany(Product::class, 'transaksi_olahraga', 'id_pengguna', 'id_produkolahraga');
     }
 }
+ 

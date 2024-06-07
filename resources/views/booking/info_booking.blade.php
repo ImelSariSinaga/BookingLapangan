@@ -44,7 +44,7 @@
                                         Approve
                                     @elseif ($booking->status == 'not approve')
                                         Not Approve
-                                    @else
+                                    @else   
                                         Still Waiting
                                     @endif
                                 </td>
@@ -52,12 +52,13 @@
                                     @if ($booking->status == '')
                                         <a href="{{ route('booking.edit', $booking->id_booking_olahraga) }}"
                                             class="btn btn-primary">Edit</a>
-                                        {{-- <a href="{{ route('cancel.edit', $booking->id_booking_olahraga) }}" --}}
                                         <a href=""
                                             class="btn btn-danger">Batal</a>
                                     @endif
                                     <a href="{{ route('booking.detail', $booking->id_booking_olahraga) }}"
                                         class="btn btn-info">Detail</a>
+                                        <a href="{{ route('booking.detail', $booking->id_booking_olahraga) }}"
+                                            class="btn btn-warning">Print</a>
                                 </td>
                             </tr>
                         @empty
@@ -71,4 +72,6 @@
             </div>
         </div>
     </div>
+
+    
 @endsection

@@ -1,6 +1,6 @@
 @extends('layout.user')
 
-@section('title', 'Jadwal Lapangan yang telah Anda Pesan')
+@section('title', 'Jadwal Lapangan')
 
 @section('content')
     <div class="container">
@@ -26,8 +26,9 @@
                                     <td>{{ $index + 1 }}</td>
                                     <td>{{ $booking->lapangan->nama_lapangan }}</td>
                                     <td>{{ $booking->nama_pemesan }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($booking->waktu_mulai_booking)->format('d/m/Y H:i') }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($booking->waktu_selesai_booking)->format('d/m/Y H:i') }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($booking->waktu_mulai_booking)->format('d/m/Y H:i') }}
+                                    <td>{{ \Carbon\Carbon::parse($booking->waktu_selesai_booking)->format('d/m/Y H:i') }}
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>

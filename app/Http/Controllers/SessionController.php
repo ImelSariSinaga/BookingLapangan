@@ -8,6 +8,7 @@ use App\Models\PenggunaOlahraga;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
+use App\Models\Lokasi;
 
 class SessionController extends Controller
 {
@@ -51,51 +52,53 @@ class SessionController extends Controller
 
         $remember = $request->has('remember');
 
-        // Simpan username dan password dalam cookie jika opsi "Remember Me" dicentang
         if ($remember) {
             setcookie("username", $request->username, time() + 3600);
             setcookie("password", $request->password, time() + 3600);
         } else {
-            // Hapus cookie username dan password jika opsi "Remember Me" tidak dicentang
             setcookie("username", "", time() - 3600);
             setcookie("password", "", time() - 3600);
         }
 
-        // Cari pengguna berdasarkan username
         $pengguna = PenggunaOlahraga::where('username_pengguna', $request->username)->first();
 
         if (!$pengguna) {
-            // Pengguna tidak ditemukan, redirect kembali ke halaman login dengan pesan error
-            return redirect()->route('login')->withErrors(['login' => 'Username salah. Mohon isi dengan benar.'])->withInput();
+            return redirect()->route('login')->withErrors(['login' => 'Username tidak ditemukan. Coba lagi.'])->withInput();
         }
 
         if (password_verify($request->password, $pengguna->password_pengguna)) {
-            // Update last_login field with current timestamp
             $pengguna->update(['last_login' => Carbon::now()]);
 
-            // Simpan id_pengguna dan jenis_pengguna ke dalam session
             session([
                 'is_logged_in' => true,
                 'id_pengguna' => $pengguna->id_pengguna,
+                'id_lokasi' => $pengguna->id_lokasi,
                 'username' => $request->username,
                 'jenis_pengguna' => $pengguna->jenis_pengguna
             ]);
+            $id_lokasi = session('id_lokasi');
 
+            $lokasi = Lokasi::find($id_lokasi);
+            if ($lokasi) {
+                $nama_lokasi = $lokasi->nama_lokasi;
+                session(['nama_lokasi' => $nama_lokasi]);
+            }
 
-            // Redirect ke halaman sesuai jenis pengguna
             switch ($pengguna->jenis_pengguna) {
                 case 'pemilik':
                     return redirect()->route('admin_dashboard')->with('success', 'Login berhasil.');
                 case 'pengelola':
-                    return redirect()->route('admin_dashboard')->with('success', 'Login berhasil.');
+                    return redirect()->route('admin_dashboard')->with([
+                        'success' => 'Login berhasil.',
+                    ]);
                 case 'pelanggan':
                     return redirect()->route('index')->with('success', 'Login berhasil.');
                 default:
-                    return redirect()->route('login')->withErrors(['login' => 'Jenis pengguna tidak valid.'])->withInput();
+                    return redirect()->route('login')->withErrors(['login' => 'Jenis pengguna tidak valid. Silahkan hubungi administrator.'])->withInput();
             }
         }
 
         // Password tidak cocok, redirect kembali ke halaman login dengan pesan error
-        return redirect()->route('login')->withErrors(['login' => 'Password Anda salah ya, input ulang lagi.'])->withInput();
+        return redirect()->route('login')->withErrors(['login' => 'Username atau Password anda salah, silahkan coba lagi.'])->withInput();
     }
 }

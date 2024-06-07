@@ -23,47 +23,28 @@ class BookingController extends Controller
 
     public function submitBooking(Request $request)
     {
+
+        $now = Carbon::now();
+        $duajam = $now->addHours(2);
+        $tigajam = $now->copy()->addHours(3);
+
         $validator = Validator::make($request->all(), [
             'nama' => 'required|string|max:255',
             'email' => 'required|email|max:255',
-            'waktu_mulai' => 'required|date_format:Y-m-d\TH:i',
-
-            'waktu_selesai' => [
-                'required',
-                'date_format:Y-m-d\TH:i',
-                'after:waktu_mulai',
-                function ($attribute, $value, $fail) use ($request) {
-                    $waktu_mulai = \Carbon\Carbon::createFromFormat('Y-m-d\TH:i', $request->waktu_mulai);
-                    $waktu_selesai = \Carbon\Carbon::createFromFormat('Y-m-d\TH:i', $value);
-                    if ($waktu_selesai->diffInHours($waktu_mulai) < 1) {
-                        $fail('Waktu selesai harus minimal 1 jam setelah waktu mulai.');
-                    }
-                },
-            ],
+            'waktu_mulai' => 'required|date|after_or_equal:' . $duajam,
+            'waktu_selesai' => 'required|date|after:waktu_mulai|after_or_equal:' . $tigajam,
             'catatan' => 'nullable|string',
             'lapangan_id' => 'required|exists:lapangan_olahraga,id_lapangan',
-            'lapangan_id' => 'required|exists:lapangan_olahraga,id_lapangan',            
             'nama_lapangan' => 'required|string'
         ]);
-
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
-
-        // Dapatkan ID pengguna dari sesi
         $id_pengguna = session('id_pengguna');
-
         var_dump($id_pengguna);
-
-
-
-        // Pastikan ID pengguna ada sebelum menyimpan data
         if (!$id_pengguna) {
-            // Handle jika ID pengguna tidak tersedia
             return redirect()->back()->with('error', 'ID pengguna tidak valid.');
         }
-
-        // Simpan data booking
         BookingOlahraga::create([
             'id_pengguna' => $id_pengguna,
             'id_lapangan' => $request->lapangan_id,
@@ -82,56 +63,44 @@ class BookingController extends Controller
     {
         $bookings = BookingOlahraga::with(['lapangan'])->get();
 
-        // Kirim data booking ke view
         return view('booking.list_booking', compact('bookings'));
     }
 
     public function approve($id)
     {
-        // Temukan booking berdasarkan ID
         $booking = BookingOlahraga::findOrFail($id);
 
-        // Ubah status booking menjadi "approve"
         $booking->status = 'approve';
         $booking->save();
 
-        // Ambil data semua booking dari database
         $bookings = BookingOlahraga::with(['lapangan'])->get();
 
-        // Redirect kembali ke halaman daftar booking dengan pesan sukses
         return redirect()->route('booking_list', compact('bookings'))->with('success', 'Booking has been approved successfully.');
     }
 
     public function info_booking()
-    { // Dapatkan ID pengguna dari sesi
+    { 
         $id_pengguna = session('id_pengguna');
 
-        // Dapatkan informasi booking berdasarkan ID pengguna
         $bookings = BookingOlahraga::where('id_pengguna', $id_pengguna)->get();
 
-        // Tampilkan halaman dengan informasi booking
         return view('booking.info_booking', compact('bookings'));
     }
     public function notApprove($id)
     {
-        // Temukan booking berdasarkan ID
         $booking = BookingOlahraga::findOrFail($id);
 
-        // Ubah status booking menjadi "not approve"
         $booking->status = 'not approve';
         $booking->save();
 
         $bookings = BookingOlahraga::with(['lapangan'])->get();
 
-        // Redirect kembali ke halaman daftar booking dengan pesan sukses
         return redirect()->route('booking_list', compact('bookings'))->with('success', 'Booking has been marked as not approved successfully.');
     }
     public function show($id)
     {
-        // Temukan booking berdasarkan ID
         $booking = BookingOlahraga::findOrFail($id);
 
-        // Kirim data booking ke view detail
         return view('booking.detail_booking', compact('booking'));
     }
     public function showDetail($id)
@@ -186,8 +155,4 @@ class BookingController extends Controller
         // Kemudian kembalikan tampilan dengan data jadwal
         return view('booking.jadwal', compact('jadwal'));
     }
-    
-
-
-    
 }

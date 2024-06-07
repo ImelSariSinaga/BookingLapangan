@@ -25,19 +25,11 @@
                     </div>
                     <div class="bg-white px-4 py-2 sm:grid sm:grid-cols-3 sm:gap-2 sm:px-3">
                         <dt class="text-sm font-medium text-gray-500">Kategori Lapangan</dt>
-                        <dd class="mt-1 text-sm text-gray-900 sm:col-span-2">
-                            <!-- Menambahkan penanganan jika data kategori lapangan tidak tersedia -->
-                            @if ($lapangan->kategori)
-                                {{ $lapangan->kategori->nama_katlapangan }}
-                            @else
-                                Kategori tidak tersedia
-                            @endif
-                        </dd>
                     </div>
                     <div class="bg-gray-50 px-4 py-2 sm:grid sm:grid-cols-3 sm:gap-2 sm:px-3">
                         <dt class="text-sm font-medium text-gray-500">Gambar Lapangan</dt>
                         <dd class="mt-1 text-sm text-gray-900 sm:col-span-2">
-                            <img src="{{ asset('storage/' . $lapangan->img_lapangan) }}" alt="Gambar Lapangan"
+                            <img src="{{ asset( $lapangan->img_lapangan) }}" alt="Gambar Lapangan"
                                 width="100px">
                         </dd>
                     </div>

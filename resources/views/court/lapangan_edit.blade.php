@@ -35,17 +35,15 @@
             </div>
             <div class="col mb-3">
                 <label class="form-label">Gambar Lapangan</label>
-                <img src="{{ asset('storage/' . $lapangan->img_lapangan) }}" class="img-fluid" width="100" alt="Gambar Lapangan">
+                <img src="{{ asset('' . $lapangan->img_lapangan) }}" class="img-fluid" width="100" alt="Gambar Lapangan">
                 <input type="file" name="img_lapangan" class="form-control">
                 @error('img_lapangan')
                     <div class="text-danger">{{ $message }}</div>
                 @enderror
             </div>
         </div>
-        <div class="row">
-            <div class="d-grid">
+            <div>
                 <button class="btn btn-warning">Update</button>
             </div>
-        </div>
     </form>
 @endsection

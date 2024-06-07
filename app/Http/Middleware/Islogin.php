@@ -17,21 +17,15 @@ class Islogin
      */
     public function handle($request, Closure $next)
     {
-        // Periksa apakah pengguna sudah terautentikasi
         if (!session('is_logged_in')) {
-            // Jika tidak, kembalikan pengguna ke halaman login
             return redirect()->route('login')->with('error', 'Silakan login terlebih dahulu.');
         }
 
-
-        // Periksa apakah pengguna adalah pemilik atau pengelola
         if (session('jenis_pengguna') !== 'pemilik' && session('jenis_pengguna') !== 'pengelola') {
-            // Jika pengguna bukan pemilik atau pengelola, kembalikan ke halaman login
-            return redirect()->route('login')->with('error', 'Anda harus login sebagai admin.');
+            return redirect()->route('error403');
         }
 
 
-        // Lanjutkan ke permintaan berikutnya jika pengguna terautentikasi dan adalah admin
         return $next($request);
     }
 }

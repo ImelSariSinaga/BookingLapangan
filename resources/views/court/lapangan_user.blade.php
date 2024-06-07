@@ -23,40 +23,21 @@
                 <div class="col-md-4 mb-4">
                     <div class="card shadow">
                         <div class="card-body">
-                            <img src="{{ asset('storage/' . $lapangan->img_lapangan) }}" class="card-img-top"
-                                alt="Lapangan Image">
-                            <h5 class="card-title m-3"
-                                style="font-family: 'Arial Black', sans-serif; font-size: 2rem; color: #333333;">
+                            <img src="{{ asset( $lapangan->img_lapangan) }}" class="card-img-top"
+                                alt="Lapangan {{ $lapangan->nama_lapangan }}">
+                            <h5 class="card-title m-3">
                                 {{ $lapangan->nama_lapangan }}</h5>
-                            <p class="card-text mb-1"
-                                style="font-family: 'Times New Roman', serif; font-size: 1.2rem; color: #666666;">
-                                @if ($lapangan->kategori)
-                                    {{ $lapangan->kategori->nama_katlapangan }}
-                                @else
-                                    Kategori lapangan tidak tersedia
-                                @endif
-                            </p>
-                            <p class="card-text mb-1"
-                                style="font-family: 'Courier New', monospace; font-size: 1.2rem; color: #666666;">
-                                Rp{{ $lapangan->harga_lapangan }}<b>/Hour</b></p>
-                            <p class="card-text mb-1"
-                                style="font-family: 'Times New Roman', serif; font-size: 1.2rem; color: #666666;">
-                                Type Court:
-                                @if ($lapangan->kategori)
-                                    {{ $lapangan->kategori->jenis_lapangan }}
-                                @else
-                                    Jenis lapangan tidak tersedia
-                                @endif
-                            </p>
+                            <p class="card-text mb-1">
+                                Rp. {{ $lapangan->harga_lapangan }}<b> /Jam</b></p>
 
                             @if (session('is_logged_in'))
                                 <a href="{{ route('user_court_show', $lapangan->id_lapangan) }}"
-                                    class="btn btn-primary btn-sm">Detail Court</a>
+                                    class="btn btn-primary btn-sm">Pelajari Lebih Lanjut ></a>
                                 <a href="{{ route('book_now', ['id_lapangan' => $lapangan->id_lapangan]) }}"
-                                    class="btn btn-success btn-sm">Book Now</a>
+                                    class="btn btn-success btn-sm">Booking Sekarang !</a>
                             @else
                                 <a href="{{ route('user_court_show', $lapangan->id_lapangan) }}"
-                                    class="btn btn-primary btn-sm">Detail Court</a>
+                                    class="btn btn-primary btn-sm">Pelajari Lebih Lanjut ></a>
                             @endif
                         </div>
                     </div>

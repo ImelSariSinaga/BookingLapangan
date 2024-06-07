@@ -14,7 +14,6 @@
             </div>
         @endif
         <div class="modal-body">
-            <!-- Isi Formulir Tambah Lokasi -->
             <form id="addLocationForm" action="{{ route('create_lokasi') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="form-group">
